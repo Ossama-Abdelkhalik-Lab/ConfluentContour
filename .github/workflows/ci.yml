@@ -1,0 +1,32 @@
+name: ci
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: ${{ matrix.os }} (OpenMP ${{ matrix.openmp }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+        openmp: [ON, OFF]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Fortran compiler
+        run: |
+          if [ "$RUNNER_OS" = macOS ]; then
+            fc=$(ls "$(brew --prefix)"/bin/gfortran-* 2>/dev/null | sort -V | tail -1)
+            if [ -z "$fc" ]; then brew install gcc; fc=$(ls "$(brew --prefix)"/bin/gfortran-* | sort -V | tail -1); fi
+          else
+            sudo apt-get update -qq && sudo apt-get install -y -qq gfortran cmake; fc=gfortran
+          fi
+          echo "FC=$fc" >> "$GITHUB_ENV"; "$fc" --version | head -1; uname -m
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCONFLUENTCONTOUR_OPENMP=${{ matrix.openmp }}
+      - name: Build
+        run: cmake --build build -j
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

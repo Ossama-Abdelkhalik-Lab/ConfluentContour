@@ -1,0 +1,5 @@
+/build/
+*.mod
+*.o
+.DS_Store
+__pycache__/

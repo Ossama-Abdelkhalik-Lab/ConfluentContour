@@ -16,7 +16,7 @@ Most importantly, wherever it can, CCS replaces the sampled contour with its exa
 This document describes the paper's method (Section 1), lists every difference (Section 2), explains the mathematics behind CCS (Section 3), walks through the algorithm in full (Section 4), and reports measured accuracy and speed (Section 5).
 
 - Implementation: `fortran/confluentcontour.f90`, module `confluentcontour`, entry points `contour_one` and `contour_batch`. This is the project's solver ID 0 ("Contour").
-- Derivations and experiments: `research/REPORT.md`.
+- Derivations and experiments: the authors' research notes (`research/REPORT.md` in their working tree; not included in this repository).
 
 ---
 
@@ -571,7 +571,7 @@ Results are identical to `contour_one` bit for bit (`tests/test_contour_batch.f9
 | **Overall mean** (3 seeds) | **193–198** | **200–206** |
 
 - In this benchmark CCS averages **0.96–0.99×** Russell's time. It is faster on near-parabolic, strongly hyperbolic and multi-revolution transfers, level on elliptic ones, and about 1.2× on mildly-to-moderately hyperbolic ones.
-- On a 30 000-case "hard" mixed dataset exported from the MATLAB generator (`research/speed/ds_bench.f90`), CCS averages **168 ns against Russell's 209**:
+- On a 30 000-case "hard" mixed dataset exported from the MATLAB generator (a research benchmark driver, not included here), CCS averages **168 ns against Russell's 209**:
 
   | Category | CCS (ns) | Russell (ns) |
   |---|---:|---:|
@@ -603,7 +603,7 @@ Max errors are over passing cases. Totals: CCS 1 failure, Russell 9, out of 220 
 
 The largest CCS errors are multi-revolution roots very close to $t_{\min}$. There the root itself is ill-conditioned ($dz/dt\propto(t-t_{\min})^{-1/2}$), so this is a property of the problem, not of the method. A stress audit of singular geometries (near-$180^\circ$, near-collinear, extreme radius ratios) fails 11 cases for CCS and 322 for Russell.
 
-**Order 4 and batching** (`benchmark_mixed`, interleaved A/B, M1 Pro):
+**Order 4 and batching** (Lamberts-Comparison `benchmark_mixed`, interleaved A/B, M1 Pro):
 
 | | Scalar, order 3 | Scalar, order 4 | Batch, order 4 | Russell |
 |---|---:|---:|---:|---:|
@@ -636,7 +636,7 @@ Through the MATLAB gateway (3009 hard mixed cases): 0.51 ms scalar and 0.47 ms b
 
 ## 6. Design alternatives that were tested and rejected
 
-Each of these was tested in 40–50-digit arithmetic and, where relevant, timed in Fortran (`research/REPORT.md`).
+Each of these was tested in 40–50-digit arithmetic and, where relevant, timed in Fortran (in the authors' research notes, not included here).
 
 | Alternative | Finding |
 |---|---|
