@@ -13,7 +13,7 @@ if(APPLE)
     set_source_files_properties(fortran/confluentcontour.f90 PROPERTIES COMPILE_DEFINITIONS CONTOUR_APPLE_SINCOS)
 endif()
 
-add_library(confluentcontour fortran/confluentcontour.f90 fortran/contour_simple.f90 fortran/lambert_api.f90)
+add_library(confluentcontour fortran/confluentcontour.f90 fortran/lambert_api.f90)
 set_target_properties(confluentcontour PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
 file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
 target_include_directories(confluentcontour PUBLIC "${CMAKE_BINARY_DIR}/modules")
@@ -39,8 +39,6 @@ contour_test(test_contour_coordinates tests/test_contour_coordinates.f90)
 contour_test(test_contour_tables tests/test_contour_tables.f90)
 # contour_batch against contour_one, bit for bit.
 contour_test(test_contour_batch tests/test_contour_batch.f90)
-# ContourSimple against contour_one across regimes.
-contour_test(test_contour_simple tests/test_contour_simple.f90)
 # Dimensional API: units, statuses, transfer plane.
 contour_test(test_lambert_api tests/test_lambert_api.f90)
 # Near-antipodal and near-coincident geometry by two-body propagation.
